@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Bharat – AI-Powered Civic Companion</title>
+  <meta name="description" content="Smart Bharat is India's AI-powered civic companion helping citizens access government services, schemes, and grievance redressal instantly." />
+  <meta name="keywords" content="India government services, AI assistant, Aadhaar, PAN, Passport, schemes, Smart Bharat" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Marked.js for Markdown -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- Leaflet for Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- App Styles -->
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/pages.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/dark.css" />
+</head>
+<body>
+
+  <!-- Loader -->
+  <div id="app-loader" class="app-loader">
+    <div class="loader-content">
+      <div class="loader-logo">
+        <span class="loader-icon">🇮🇳</span>
+        <span class="loader-brand">Smart Bharat</span>
+      </div>
+      <div class="loader-bar"><div class="loader-fill"></div></div>
+      <p class="loader-text">Loading AI Civic Companion...</p>
+    </div>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Navigation -->
+  <nav id="main-nav" class="main-nav">
+    <div class="nav-container">
+      <div class="nav-brand" onclick="navigateTo('home')">
+        <span class="brand-flag">🇮🇳</span>
+        <div class="brand-text">
+          <span class="brand-name">Smart Bharat</span>
+          <span class="brand-tagline">AI Civic Companion</span>
+        </div>
+      </div>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#" onclick="navigateTo('home')" data-page="home" class="nav-link active">Home</a></li>
+        <li><a href="#" onclick="navigateTo('chat')" data-page="chat" class="nav-link">AI Assistant</a></li>
+        <li><a href="#" onclick="navigateTo('schemes')" data-page="schemes" class="nav-link">Schemes</a></li>
+        <li><a href="#" onclick="navigateTo('complaint')" data-page="complaint" class="nav-link">Complaints</a></li>
+        <li><a href="#" onclick="navigateTo('documents')" data-page="documents" class="nav-link">Documents</a></li>
+        <li><a href="#" onclick="navigateTo('offices')" data-page="offices" class="nav-link">Offices</a></li>
+        <li><a href="#" onclick="navigateTo('dashboard')" data-page="dashboard" class="nav-link">Dashboard</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <!-- Language Switcher -->
+        <div class="lang-switcher" id="lang-switcher">
+          <button class="lang-btn" onclick="toggleLangMenu()" id="lang-btn-toggle">
+            <i class="fa fa-globe"></i> <span id="current-lang-label">EN</span>
+          </button>
+          <div class="lang-dropdown" id="lang-dropdown">
+            <button onclick="setLanguage('en')">🇬🇧 English</button>
+            <button onclick="setLanguage('hi')">🇮🇳 हिन्दी</button>
+            <button onclick="setLanguage('ta')">🌿 தமிழ்</button>
+            <button onclick="setLanguage('te')">🌿 తెలుగు</button>
+            <button onclick="setLanguage('kn')">🌿 ಕನ್ನಡ</button>
+            <button onclick="setLanguage('ml')">🌿 മലയാളം</button>
+          </div>
+        </div>
+
+        <!-- Dark Mode -->
+        <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+          <i class="fa fa-moon" id="theme-icon"></i>
+        </button>
+
+        <!-- Auth Buttons -->
+        <div id="auth-section">
+          <button class="btn btn-outline btn-sm" onclick="navigateTo('login')">Login</button>
+          <button class="btn btn-primary btn-sm" onclick="navigateTo('login')">Sign Up</button>
+        </div>
+        <div id="user-avatar-section" style="display:none">
+          <div class="user-avatar-menu">
+            <div class="user-avatar" onclick="toggleUserMenu()" id="user-avatar">U</div>
+            <div class="user-menu" id="user-menu">
+              <div class="user-menu-header">
+                <span id="user-menu-name">User</span>
+                <span id="user-menu-email" style="font-size:11px;color:var(--text-muted)"></span>
+              </div>
+              <a href="#" onclick="navigateTo('dashboard')"><i class="fa fa-dashboard"></i> Dashboard</a>
+              <a href="#" onclick="navigateTo('admin')"><i class="fa fa-shield"></i> Admin</a>
+              <a href="#" onclick="logout()"><i class="fa fa-sign-out"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+
+        <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileNav()">
+          <i class="fa fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Nav Drawer -->
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileNav()"></div>
+  <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+    <div class="mobile-nav-header">
+      <span>🇮🇳 Smart Bharat</span>
+      <button onclick="closeMobileNav()"><i class="fa fa-times"></i></button>
+    </div>
+    <ul class="mobile-nav-links">
+      <li><a href="#" onclick="navigateTo('home');closeMobileNav()"><i class="fa fa-home"></i> Home</a></li>
+      <li><a href="#" onclick="navigateTo('chat');closeMobileNav()"><i class="fa fa-robot"></i> AI Assistant</a></li>
+      <li><a href="#" onclick="navigateTo('schemes');closeMobileNav()"><i class="fa fa-star"></i> Schemes</a></li>
+      <li><a href="#" onclick="navigateTo('complaint');closeMobileNav()"><i class="fa fa-exclamation-triangle"></i> Complaints</a></li>
+      <li><a href="#" onclick="navigateTo('documents');closeMobileNav()"><i class="fa fa-file-text"></i> Documents</a></li>
+      <li><a href="#" onclick="navigateTo('offices');closeMobileNav()"><i class="fa fa-map-marker"></i> Offices</a></li>
+      <li><a href="#" onclick="navigateTo('dashboard');closeMobileNav()"><i class="fa fa-user"></i> Dashboard</a></li>
+    </ul>
+  </div>
+
+  <!-- Page Router -->
+  <main id="app-main">
+    <!-- Pages injected by JS -->
+  </main>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/pages/home.js"></script>
+  <script src="js/pages/chat.js"></script>
+  <script src="js/pages/schemes.js"></script>
+  <script src="js/pages/complaint.js"></script>
+  <script src="js/pages/tracking.js"></script>
+  <script src="js/pages/documents.js"></script>
+  <script src="js/pages/offices.js"></script>
+  <script src="js/pages/dashboard.js"></script>
+  <script src="js/pages/admin.js"></script>
+  <script src="js/pages/login.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
